@@ -80,8 +80,8 @@ struct specification
     specification()
       : map_tasks(0),                   
         reduce_tasks(1),
-        max_file_segment_size(1048576L),    // default 1Mb
-        output_filespec("mapreduce_")   
+        output_filespec("mapreduce_"),   
+        max_file_segment_size(1048576L)     // default 1Mb
     {
     }
 };

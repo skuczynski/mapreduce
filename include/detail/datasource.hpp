@@ -17,8 +17,8 @@ class file_handler : ::mapreduce::detail::noncopyable
   public:
     file_handler(mapreduce::specification const &spec);
 
-    bool const get_data(Key const &key, Value &value)   const;
-    bool const setup_key(Key &/*key*/)                  const { return false; }
+    bool get_data(Key const &key, Value &value)   const;
+    bool setup_key(Key &/*key*/)                  const { return false; }
 
   private:
     mapreduce::specification const &specification_;
@@ -43,7 +43,7 @@ file_handler<
 }
 
 template<>
-bool const
+bool
 file_handler<
     std::string,
     std::ifstream>::get_data(
@@ -90,7 +90,7 @@ file_handler<
 
 
 template<>
-bool const
+bool
 file_handler<
     std::string,
     std::pair<
@@ -152,7 +152,7 @@ file_handler<
 }
 
 template<>
-bool const
+bool
 file_handler<
     std::string,
     std::pair<
@@ -183,7 +183,7 @@ class directory_iterator : mapreduce::detail::noncopyable
         it_dir_ = it_dir_t(specification_.input_directory);
     }
 
-    bool const setup_key(typename MapTask::key_type &key) const
+    bool setup_key(typename MapTask::key_type &key) const
     {
         if (!file_handler_.setup_key(key))
         {
@@ -202,7 +202,7 @@ class directory_iterator : mapreduce::detail::noncopyable
         return true;
     }
 
-    bool const get_data(typename MapTask::key_type &key, typename MapTask::value_type &value) const
+    bool get_data(typename MapTask::key_type &key, typename MapTask::value_type &value) const
     {
         return file_handler_.get_data(key, value);
     }

@@ -26,7 +26,7 @@ unsigned const friends[8][8] = { { 0, 1, 0, 1, 1, 0, 0, 0 },
                                  { 0, 0, 0, 0, 0, 0, 0, 0 } };
 char const * const names[] = { "Steve", "Anne", "Michael", "Brett", "Diane", "Sue", "Ruby", "Jack" };
 
-bool const is_friend(unsigned const person1, unsigned const person2)
+bool is_friend(unsigned const person1, unsigned const person2)
 {
     return person1 != person2  &&  (friends[person1][person2]  ||  friends[person2][person1]);
 }
@@ -39,13 +39,13 @@ class datasource : mapreduce::detail::noncopyable
     {
     }
 
-    bool const setup_key(typename MapTask::key_type &key)
+    bool setup_key(typename MapTask::key_type &key)
     {
         key = sequence_++;
         return key < 8;
     }
 
-    bool const get_data(typename MapTask::key_type const &key, typename MapTask::value_type &value)
+    bool get_data(typename MapTask::key_type const &key, typename MapTask::value_type &value)
     {
         for (unsigned loop=0; loop<8; ++loop)
             if (is_friend(key,loop))

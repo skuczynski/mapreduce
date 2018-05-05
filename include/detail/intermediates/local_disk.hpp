@@ -9,18 +9,24 @@
 #include <fstream>      // ubuntu linux
 #endif
 
-#include "../utils.hpp"
-
 namespace mapreduce {
 
 struct null_combiner;
 
 namespace detail {
 
+template<typename T> uintmax_t length(T const &str);
+
+template<>
+inline uintmax_t length(std::string const &str)
+{
+    return str.length();
+}
+
 struct file_lines_comp
 {
     template<typename T>
-    bool const operator()(T const &first, T const &second)
+    bool operator()(T const &first, T const &second)
     {
         return first.second < second.second;
     }
@@ -151,7 +157,7 @@ struct file_merger
 template<typename Record>
 struct file_key_combiner
 {
-    bool const operator()(std::string const &in, std::string const &out) const
+    bool operator()(std::string const &in, std::string const &out) const
     {
         return mapreduce::file_key_combiner<Record>(in, out);
     }
@@ -256,7 +262,7 @@ class local_disk : detail::noncopyable
             set_current();
         }
 
-        bool const equal(const_result_iterator const &other) const
+        bool equal(const_result_iterator const &other) const
         {
             return (kvlist_.size() == 0  &&  other.kvlist_.size() == 0)
                ||  (kvlist_.size() > 0
@@ -372,12 +378,12 @@ class local_disk : detail::noncopyable
                 }
             }
 
-            bool const sorted(void) const
+            bool sorted(void) const
             {
                 return sorted_;
             }
 
-            bool const write(key_type const &key, value_type const &value)
+            bool write(key_type const &key, value_type const &value)
             {
                 if (use_cache_)
                 {
@@ -390,7 +396,7 @@ class local_disk : detail::noncopyable
             }
 
           protected:
-            bool const write(key_type   const &key,
+            bool write(key_type   const &key,
                              value_type const &value,
                              size_t     const count)
             {
@@ -407,7 +413,7 @@ class local_disk : detail::noncopyable
                 return true;
             }
 
-            bool const flush_cache(void)
+            bool flush_cache(void)
             {
                 use_cache_ = false;
                 for (auto it  = records_.cbegin(); it != records_.cend(); ++it)
@@ -483,7 +489,7 @@ class local_disk : detail::noncopyable
 
     // receive final result
     template<typename StoreResult>
-    bool const insert(typename reduce_task_type::key_type   const &key,
+    bool insert(typename reduce_task_type::key_type   const &key,
                       typename reduce_task_type::value_type const &value,
                       StoreResult                                 &store_result)
     {
@@ -492,7 +498,7 @@ class local_disk : detail::noncopyable
     }
 
     // receive intermediate result
-    bool const insert(typename reduce_task_type::key_type   const &key,
+    bool insert(typename reduce_task_type::key_type   const &key,
                       typename reduce_task_type::value_type const &value)
     {
         size_t const partition = partitioner_(key, num_partitions_);
@@ -632,7 +638,7 @@ class local_disk : detail::noncopyable
         detail::delete_file(filename.c_str());
     }
 
-    static bool const read_record(std::istream &infile,
+    static bool read_record(std::istream &infile,
                                   typename reduce_task_type::key_type   &key,
                                   typename reduce_task_type::value_type &value)
     {

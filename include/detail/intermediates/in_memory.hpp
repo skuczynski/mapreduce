@@ -35,7 +35,7 @@ class reduce_null_output
     {
     }
 
-    bool const operator()(typename ReduceTask::key_type   const &/*key*/,
+    bool operator()(typename ReduceTask::key_type   const &/*key*/,
                           typename ReduceTask::value_type const &/*value*/)
     {
         return true;
@@ -107,7 +107,7 @@ class in_memory : detail::noncopyable
                 value_ = std::make_pair(iterators_[current_.first]->first, *current_.second);
         }
 
-        bool const equal(const_result_iterator const &other) const
+        bool equal(const_result_iterator const &other) const
         {
             if (current_.first == std::numeric_limits<decltype(current_.first)>::max()  ||  other.current_.first == std::numeric_limits<decltype(current_.first)>::max())
                 return other.current_.first == current_.first;
@@ -257,14 +257,14 @@ class in_memory : detail::noncopyable
     }
 
     template<typename T>
-    bool const insert(T const &key, typename reduce_task_type::value_type const &value)
+    bool insert(T const &key, typename reduce_task_type::value_type const &value)
     {
         return insert(make_intermediate_key<key_type>(key), value);
     }
 
     // receive final result
     template<typename StoreResult>
-    bool const insert(typename reduce_task_type::key_type   const &key,
+    bool insert(typename reduce_task_type::key_type   const &key,
                       typename reduce_task_type::value_type const &value,
                       StoreResult &store_result)
     {
@@ -272,7 +272,7 @@ class in_memory : detail::noncopyable
     }
 
     // receive intermediate result
-    bool const insert(typename reduce_task_type::key_type   const &key,
+    bool insert(typename reduce_task_type::key_type   const &key,
                       typename reduce_task_type::value_type const &value)
     {
         size_t const  partition = (num_partitions_ == 1)? 0 : partitioner_(key, num_partitions_);

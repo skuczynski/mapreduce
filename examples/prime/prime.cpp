@@ -19,7 +19,7 @@
 
 namespace prime_calculator {
 
-bool const is_prime(long const number)
+bool is_prime(long const number)
 {
     if (number > 2)
     {
@@ -46,17 +46,17 @@ class number_source : mapreduce::detail::noncopyable
 {
   public:
     number_source(long first, long last, long step)
-      : sequence_(0), first_(first), last_(last), step_(step)
+      : sequence_(0), step_(step), last_(last), first_(first)
     {
     }
 
-    bool const setup_key(typename MapTask::key_type &key)
+    bool setup_key(typename MapTask::key_type &key)
     {
         key = sequence_++;
         return (key * step_ <= last_);
     }
 
-    bool const get_data(typename MapTask::key_type const &key, typename MapTask::value_type &value)
+    bool get_data(typename MapTask::key_type const &key, typename MapTask::value_type &value)
     {
         typename MapTask::value_type val;
 
@@ -134,7 +134,9 @@ int main(int argc, char *argv[])
     std::cout <<"\nMapReduce finished in " << result.job_runtime.count() << " with " << std::distance(job.begin_results(), job.end_results()) << " results" << std::endl;
 
     for (auto it=job.begin_results(); it!=job.end_results(); ++it)
+    {
         std::cout << it->second <<" ";
+    }
 
 	return 0;
 }

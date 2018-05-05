@@ -78,7 +78,7 @@ namespace mapreduce {
 
 namespace linux_os {
 
-std::string get_temporary_filename(std::string &pathname)
+std::string get_temporary_filename(std::string &/*pathname*/)
 {
     const std::string tmp = "/tmp/XXXXXX";
     char* tmpfile = const_cast<char*>(tmp.c_str());

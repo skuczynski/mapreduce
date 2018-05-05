@@ -2,9 +2,23 @@
 // https://github.com/cdmh/mapreduce
 
 #pragma once
-#include "utils.hpp"
 
 namespace mapreduce {
+
+template<typename T> uintmax_t    length(T const &str);
+template<typename T> char const * data(T const &str);
+
+template<>
+inline uintmax_t length(std::string const &str)
+{
+    return str.length();
+}
+
+template<>
+inline char const * data(std::string const &str)
+{
+    return str.data();
+}
 
 template<typename MapKey, typename MapValue>
 class map_task
@@ -72,7 +86,7 @@ class job : detail::noncopyable
         }
 
         template<typename T>
-        bool const emit_intermediate(T const &key, typename reduce_task_type::value_type const &value)
+        bool emit_intermediate(T const &key, typename reduce_task_type::value_type const &value)
         {
             return intermediate_store_.insert(key, value);
         }
@@ -147,7 +161,7 @@ class job : detail::noncopyable
         return intermediate_store_.end_results();
     }
 
-    bool const get_next_map_key(typename map_task_type::key_type *&key)
+    bool get_next_map_key(typename map_task_type::key_type *&key)
     {
         std::unique_ptr<typename map_task_type::key_type> next_key(new typename map_task_type::key_type);
         if (!datasource_.setup_key(*next_key))
@@ -156,12 +170,12 @@ class job : detail::noncopyable
         return true;
     }
 
-    size_t const number_of_partitions(void) const
+    size_t number_of_partitions(void) const
     {
         return specification_.reduce_tasks;
     }
 
-    size_t const number_of_map_tasks(void) const
+    size_t number_of_map_tasks(void) const
     {
         return specification_.map_tasks;
     }
@@ -182,7 +196,7 @@ class job : detail::noncopyable
     }
 
     template<typename Sync>
-    bool const run_map_task(typename map_task_type::key_type *key, results &result, Sync &sync)
+    bool run_map_task(typename map_task_type::key_type *key, results &result, Sync &sync)
     {
         auto const start_time = std::chrono::system_clock::now();
 
@@ -225,7 +239,7 @@ class job : detail::noncopyable
         intermediate_store_.run_intermediate_results_shuffle(partition);
     }
 
-    bool const run_reduce_task(size_t const partition, results &result)
+    bool run_reduce_task(size_t const partition, results &result)
     {
         bool success = true;
 

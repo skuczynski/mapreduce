@@ -23,19 +23,19 @@ namespace mapreduce {
 namespace detail {
 
 template<typename T>
-bool const less_2nd(T const &first, T const &second)
+bool less_2nd(T const &first, T const &second)
 {
     return first.second < second.second;
 }
 
 template<typename T>
-bool const greater_2nd(T const &first, T const &second)
+bool greater_2nd(T const &first, T const &second)
 {
     return first.second > second.second;
 }
 
 template<typename It>
-bool const do_file_merge(It first, It last, std::string const &outfilename)
+bool do_file_merge(It first, It last, std::string const &outfilename)
 {
 #ifdef _DEBUG
     int const max_files=10;
@@ -84,7 +84,7 @@ bool const do_file_merge(It first, It last, std::string const &outfilename)
     return true;
 }
 
-inline bool const delete_file(std::string const &pathname)
+inline bool delete_file(std::string const &pathname)
 {
     if (pathname.empty())
         return true;
@@ -143,7 +143,7 @@ struct shared_ptr_indirect_less
 };
 
 template<typename Record>
-bool const file_key_combiner(std::string const &in,
+bool file_key_combiner(std::string const &in,
                              std::string const &out,
                              uint32_t    const  max_lines = 4294967000U)
 {
@@ -203,7 +203,9 @@ bool const file_key_combiner(std::string const &in,
         temporary_files.clear();
     }
     else
+    {
         detail::do_file_merge(temporary_files.cbegin(), temporary_files.cend(), out);
+    }
 
 	return true;
 }

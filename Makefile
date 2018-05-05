@@ -1,6 +1,6 @@
 CXX=g++
 INCLUDES=-I./include -I/usr/include/boost
-CXXFLAGS=-std=c++14
+CXXFLAGS=-std=c++17 -Wall -Wextra -Wpedantic -Werror
 LDFLAGS=-lboost_system -lboost_filesystem -lboost_iostreams -lpthread
 
 all: prime friends
