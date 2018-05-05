@@ -9,6 +9,8 @@
 #include <fstream>      // ubuntu linux
 #endif
 
+#include "../utils.hpp"
+
 namespace mapreduce {
 
 struct null_combiner;
@@ -490,7 +492,7 @@ class local_disk : detail::noncopyable
     }
 
     // receive intermediate result
-    bool const insert(typename key_type                     const &key,
+    bool const insert(typename reduce_task_type::key_type   const &key,
                       typename reduce_task_type::value_type const &value)
     {
         size_t const partition = partitioner_(key, num_partitions_);

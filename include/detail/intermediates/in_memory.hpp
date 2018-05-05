@@ -46,10 +46,10 @@ class reduce_null_output
 template<
     typename MapTask,
     typename ReduceTask,
-    typename KeyType     = typename ReduceTask::key_type,
-    typename PartitionFn = mapreduce::hash_partitioner,
-    typename KeyCompare  = std::less<typename ReduceTask::key_type>,
-    typename StoreResult = reduce_null_output<MapTask, ReduceTask>
+    typename KeyType         = typename ReduceTask::key_type,
+    typename PartitionFn     = mapreduce::hash_partitioner,
+    typename KeyCompare      = std::less<typename ReduceTask::key_type>,
+    typename StoreResultType = reduce_null_output<MapTask, ReduceTask>
 >
 class in_memory : detail::noncopyable
 {
@@ -58,7 +58,7 @@ class in_memory : detail::noncopyable
     typedef typename ReduceTask::value_type value_type;
     typedef MapTask                         map_task_type;
     typedef ReduceTask                      reduce_task_type;
-    typedef StoreResult                     store_result_type;
+    typedef StoreResultType                 store_result_type;
 
   private:
     typedef
@@ -272,7 +272,7 @@ class in_memory : detail::noncopyable
     }
 
     // receive intermediate result
-    bool const insert(typename key_type                     const &key,
+    bool const insert(typename reduce_task_type::key_type   const &key,
                       typename reduce_task_type::value_type const &value)
     {
         size_t const  partition = (num_partitions_ == 1)? 0 : partitioner_(key, num_partitions_);
